@@ -1,6 +1,6 @@
 package sk.stuba.fei.uim.oop.karty;
 
-public class Kacky {
+public class Kacky extends Balicek{
     private boolean zivost;
 
     public Kacky() {
