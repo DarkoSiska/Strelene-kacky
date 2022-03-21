@@ -8,19 +8,22 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class StreleneKackyHra {
-    private Hrac[] hraci;
+    //private Hrac[] hraci;
+    ArrayList<Hrac> hraci;
     ArrayList<Balicek> balicek;
 
     public StreleneKackyHra() {
         int pocetHracov = ZKlavesnice.readInt("Zadajte pocet hracvo: ");
+        this.hraci = new ArrayList<>();
         this.hraci = generujHracov(pocetHracov);
         balicek = generujBalicek(pocetHracov);
+        System.out.println("asdf");
     }
 
-    public Hrac[] generujHracov(int pocetHracov){
-        Hrac[] poleHracov = new Hrac[pocetHracov];
+    public ArrayList<Hrac> generujHracov(int pocetHracov){
+        ArrayList<Hrac> poleHracov = new ArrayList<>();
         for (int i = 0; i < pocetHracov; i++) {
-            poleHracov[i] = new Hrac();
+            poleHracov.add(new Hrac());
         }
         return poleHracov;
     }
@@ -28,8 +31,9 @@ public class StreleneKackyHra {
     public ArrayList<Balicek> generujBalicek(int pocetHracov){
         ArrayList<Balicek> balicek = new ArrayList<>();
         for (int i = 0; i < pocetHracov; i++) {
+            Hrac hrac = this.hraci.get(i);
             for (int j = 0; j < 5; j++){
-                balicek.add(this.hraci[i].getKacky(j));
+                balicek.add(hrac.getKacky(j));
             }
         }
         return balicek;
