@@ -7,6 +7,8 @@ import java.util.ArrayList;
 public class Hrac {
     ArrayList<Kacky> kacky;
     ArrayList<AkcneKarty> kartyVRuke = new ArrayList<>();
+    private final int cisloHracu;
+    private boolean zivostHraca;
 
     public Kacky getKacky(int i) {
         return kacky.get(i);
@@ -14,6 +16,8 @@ public class Hrac {
 
     public Hrac(int prisluchaHracovi) {
         this.kacky = generujKacky(prisluchaHracovi);
+        this.cisloHracu = prisluchaHracovi;
+        this.zivostHraca = true;
     }
 
     public ArrayList<Kacky> generujKacky(int prisluchaHracovi) {
@@ -30,5 +34,21 @@ public class Hrac {
 
     public void zotriKacicu() {
         this.kacky.remove(0);
+    }
+
+    public AkcneKarty getKartuVRuke(int poradieKarty) {
+        return kartyVRuke.get(poradieKarty);
+    }
+
+    public int getCisloHracu() {
+        return cisloHracu;
+    }
+
+    public void setZivostHraca(boolean zivostHraca) {
+        this.zivostHraca = zivostHraca;
+    }
+
+    public boolean isZivostHraca() {
+        return zivostHraca;
     }
 }

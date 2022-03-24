@@ -4,7 +4,6 @@ import sk.stuba.fei.uim.oop.akcne.DivokyBil;
 import sk.stuba.fei.uim.oop.akcne.Vystrelit;
 import sk.stuba.fei.uim.oop.akcne.Zamierit;
 import sk.stuba.fei.uim.oop.karty.Balicek;
-import sk.stuba.fei.uim.oop.karty.Kacky;
 import sk.stuba.fei.uim.oop.karty.Voda;
 import sk.stuba.fei.uim.oop.pohyb.KacaciPochod;
 import sk.stuba.fei.uim.oop.pohyb.KacaciTanec;
@@ -15,23 +14,21 @@ import sk.stuba.fei.uim.oop.utility.ZKlavesnice;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 
 public class StreleneKackyHra {
     ArrayList<Hrac> hraci = new ArrayList<>();
     ArrayList<Balicek> balicek = new ArrayList<>();
     ArrayList<AkcneKarty> balicekAkcny = new ArrayList<>();
+    private final Boolean[] zamierovace = new Boolean[6];
 
     public StreleneKackyHra() {
-        Boolean[] zamierovace = new Boolean[6];
         Arrays.fill(zamierovace, Boolean.FALSE);
         int pocetHracov = ZKlavesnice.readInt("Zadajte pocet Hracov: ");
         generujHracov(pocetHracov);
         generujBalicek(pocetHracov);
         generujBalicekAkcny();
         generujKartyHracom();
-        vypisHracejPlochy(balicek, zamierovace);
-        System.out.println("123");
+        zacniHru();
     }
 
     public void generujHracov(int pocetHracov){
@@ -73,31 +70,57 @@ public class StreleneKackyHra {
         Collections.shuffle(this.balicekAkcny);
     }
 
+    public void vytiahniKartu(Hrac hrac) {
+        hrac.pridajKartuDoRuky(this.balicekAkcny.get(0));
+        this.balicekAkcny.remove(0);
+    }
+
     public void generujKartyHracom() {
         for (Hrac hrac:this.hraci) {
             for (int i = 0; i < 3; i++) {
-                hrac.pridajKartuDoRuky(this.balicekAkcny.get(0));
-                this.balicekAkcny.remove(0);
+                vytiahniKartu(hrac);
             }
         }
     }
 
-    public void zabiKacku(int poziciaKackyVBalicku) {
-        Iterator<Balicek> itr = this.balicek.iterator();
-        for (int i = 0; i < poziciaKackyVBalicku; i++) {
-            itr.next();
+    public void vypisHracejPlochy(ArrayList<Balicek> balicek, Boolean[] zamierovace) {
+        String zamierovac;
+        System.out.println("=====================================");
+        for (int i = 0; i < 6; i++) {
+            if (zamierovace[i])
+                zamierovac = "Zamierene";
+            else
+                zamierovac = "Nezamierene";
+            System.out.println(i + ". " + balicek.get(i).vypisKartu() + " " + zamierovac);
         }
-        Kacky kacica = (Kacky)itr.next();
-        this.hraci.get(kacica.getPrisluchaHracovi()).zotriKacicu();
-        if (this.hraci.get(kacica.getPrisluchaHracovi()).kacky.size() == 0) {
-            this.hraci.remove(kacica.getPrisluchaHracovi());
-        }
-        this.balicek.remove(poziciaKackyVBalicku);
+        System.out.println();
     }
 
-    public void vypisHracejPlochy(ArrayList<Balicek> balicek, Boolean[] zamierovace) {
-        for (int i = 0; i < 6; i++) {
-            System.out.println(i + ". " + balicek.get(i).vypisKartu() + " " + zamierovace[i]);
+    public void hracNaTahu(Hrac hrac) {
+        System.out.println("Hrac " + hrac.getCisloHracu());
+        System.out.println("Pocet zivotov: " + hrac.kacky.size());
+        System.out.println("Ma v ruke:");
+        for (int i = 0; i < 3; i++) {
+            System.out.println(i + ". " + hrac.getKartuVRuke(i));
         }
+    }
+
+    public void zacniHru () {
+        while (hraci.size() != 1) {
+            for (Hrac hrac:hraci) {
+                vypisHracejPlochy(this.balicek, this.zamierovace);
+                hracNaTahu(hrac);
+                int zahranaKartaZRuke = ZKlavesnice.readInt("Zadajte ktoru kartu chces zahrat: ");
+                int poziciaKartyVRybniku = ZKlavesnice.readInt("Ktoru kartu chces oznacit: ");
+                System.out.println("=====================================");
+                hrac.kartyVRuke.get(zahranaKartaZRuke).zahrat(this.hraci, this.zamierovace, this.balicek, poziciaKartyVRybniku, this.balicekAkcny);
+                if (hrac.isZivostHraca()) {
+                    hrac.kartyVRuke.remove(zahranaKartaZRuke);
+                    vytiahniKartu(hrac);
+                }
+            }
+            System.out.println("+++++++++++++++++++++++++++++++++++++");
+        }
+        System.out.println("Vyhral Hrac " + this.hraci.get(0).getCisloHracu());
     }
 }
