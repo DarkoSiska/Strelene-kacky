@@ -10,7 +10,7 @@ public class Vystrelit extends AkcneKarty {
 
     @Override
     public void zahrat(ArrayList<Hrac> hraci, Boolean[] pole, ArrayList<Balicek> balicek, int indexKartyVRybniku, ArrayList<AkcneKarty> balicekAkcny) {
-        zabiKacku(indexKartyVRybniku, balicek, hraci, balicekAkcny);
+        zabiKacku(indexKartyVRybniku, balicek, hraci);
         pole[indexKartyVRybniku] = false;
     }
 }

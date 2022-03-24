@@ -105,18 +105,33 @@ public class StreleneKackyHra {
         }
     }
 
+    public void zabiHraca(Hrac hrac, int indexHraca) {
+        for (int i = 0; i < hrac.kartyVRuke.size(); i++) {
+            this.balicekAkcny.add(hrac.getKartuVRuke(0));
+        }
+        this.hraci.remove(indexHraca);
+    }
+
     public void zacniHru () {
-        while (hraci.size() != 1) {
-            for (Hrac hrac:hraci) {
-                vypisHracejPlochy(this.balicek, this.zamierovace);
-                hracNaTahu(hrac);
-                int zahranaKartaZRuke = ZKlavesnice.readInt("Zadajte ktoru kartu chces zahrat: ");
-                int poziciaKartyVRybniku = ZKlavesnice.readInt("Ktoru kartu chces oznacit: ");
-                System.out.println("=====================================");
-                hrac.kartyVRuke.get(zahranaKartaZRuke).zahrat(this.hraci, this.zamierovace, this.balicek, poziciaKartyVRybniku, this.balicekAkcny);
-                if (hrac.isZivostHraca()) {
-                    hrac.kartyVRuke.remove(zahranaKartaZRuke);
-                    vytiahniKartu(hrac);
+        while (this.hraci.size() != 1) {
+            for (Hrac hrac:this.hraci) {
+                    if (hrac.isZivostHraca()) {
+                        vypisHracejPlochy(this.balicek, this.zamierovace);
+                        hracNaTahu(hrac);
+                        int zahraNaKartaZRuke = ZKlavesnice.readInt("Zadajte ktoru kartu chces zahrat: ");
+                        int poziciaKartyVRybniku = ZKlavesnice.readInt("Ktoru kartu chces oznacit: ");
+                        System.out.println("=====================================");
+                        hrac.kartyVRuke.get(zahraNaKartaZRuke).zahrat(this.hraci, this.zamierovace, this.balicek, poziciaKartyVRybniku, this.balicekAkcny);
+                        if (hrac.isZivostHraca()) {
+                            this.balicekAkcny.add(hrac.kartyVRuke.get(zahraNaKartaZRuke));
+                            hrac.kartyVRuke.remove(zahraNaKartaZRuke);
+                            vytiahniKartu(hrac);
+                        }
+                    }
+                }
+            for (int i = this.hraci.size()-1; i > 0 ; i--) {
+                if (!this.hraci.get(i).isZivostHraca()) {
+                    zabiHraca(this.hraci.get(i), i);
                 }
             }
             System.out.println("+++++++++++++++++++++++++++++++++++++");

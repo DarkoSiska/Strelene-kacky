@@ -16,14 +16,14 @@ public abstract class AkcneKarty {
     public int indexHraca(Kacky kacica, ArrayList<Hrac> hraci) {
         int x = kacica.getPrisluchaHracovi();
         int index = 0;
-        for (Hrac hrac: hraci) {
-            if (hrac.getCisloHracu() == x)
-                index = hrac.getCisloHracu();
+        for (int i = hraci.size()-1; i > 0 ; i--) {
+            if (hraci.get(i).getCisloHracu() == x)
+                index = i;
         }
         return index;
     }
 
-    public void zabiKacku(int poziciaKackyVBalicku, ArrayList<Balicek> balicek, ArrayList<Hrac> hraci, ArrayList<AkcneKarty> balicekAkcny) {
+    public void zabiKacku(int poziciaKackyVBalicku, ArrayList<Balicek> balicek, ArrayList<Hrac> hraci) {
         Iterator<Balicek> itr = balicek.iterator();
         for (int i = 0; i < poziciaKackyVBalicku; i++) {
             itr.next();
@@ -33,10 +33,6 @@ public abstract class AkcneKarty {
         hraci.get(indexHraca).zotriKacicu();
         if (hraci.get(indexHraca).kacky.size() == 0) {
             hraci.get(indexHraca).setZivostHraca(false);
-            for (int i = 0; i < hraci.get(indexHraca).kartyVRuke.size(); i++) {
-                balicekAkcny.add(hraci.get(indexHraca).getKartuVRuke(0));
-            }
-            hraci.remove(indexHraca);
         }
         balicek.remove(poziciaKackyVBalicku);
     }
