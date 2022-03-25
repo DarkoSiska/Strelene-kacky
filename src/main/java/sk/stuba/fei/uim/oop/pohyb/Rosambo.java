@@ -9,7 +9,7 @@ import java.util.Collections;
 
 public class Rosambo extends AkcneKarty {
     @Override
-    public void zahrat(ArrayList<Hrac> hraci, Boolean[] pole, ArrayList<Balicek> balicek, int indexKartyVRybniku, ArrayList<AkcneKarty> balicekAkcny) {
+    public void zahrat(ArrayList<Hrac> hraci, boolean[] pole, ArrayList<Balicek> balicek, int indexKartyVRybniku, ArrayList<AkcneKarty> balicekAkcny) {
         Collections.shuffle(balicek.subList(0, 6));
     }
 }

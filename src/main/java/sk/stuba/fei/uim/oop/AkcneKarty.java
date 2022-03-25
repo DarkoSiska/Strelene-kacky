@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public abstract class AkcneKarty {
-    public abstract void zahrat(ArrayList<Hrac> hraci, Boolean[] pole, ArrayList<Balicek> balicek, int indexKartyVRybniku, ArrayList<AkcneKarty> balicekAkcny);
+    public abstract void zahrat(ArrayList<Hrac> hraci, boolean[] pole, ArrayList<Balicek> balicek, int indexKartyVRybniku, ArrayList<AkcneKarty> balicekAkcny);
     @Override
     public String toString() {
         return getClass().getSimpleName();
