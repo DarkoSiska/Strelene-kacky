@@ -17,9 +17,9 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class StreleneKackyHra {
-    ArrayList<Hrac> hraci = new ArrayList<>();
-    ArrayList<Balicek> balicek = new ArrayList<>();
-    ArrayList<AkcneKarty> balicekAkcny = new ArrayList<>();
+    private ArrayList<Hrac> hraci;
+    private ArrayList<Balicek> balicek;
+    private ArrayList<AkcneKarty> balicekAkcny;
     private final boolean[] zamierovace = new boolean[6];
 
     public StreleneKackyHra() {
@@ -35,13 +35,15 @@ public class StreleneKackyHra {
         zacniHru();
     }
 
-    public void generujHracov(int pocetHracov){
+    private void generujHracov(int pocetHracov){
+        hraci = new ArrayList<>();
         for (int i = 0; i < pocetHracov; i++) {
             this.hraci.add(new Hrac(i));
         }
     }
 
-    public void generujBalicek(int pocetHracov) {
+    private void generujBalicek(int pocetHracov) {
+        balicek = new ArrayList<>();
         for (int i = 0; i < pocetHracov; i++) {
             for (int j = 0; j < 5; j++){
                 this.balicek.add(this.hraci.get(i).getKacky(j));
@@ -53,7 +55,8 @@ public class StreleneKackyHra {
         Collections.shuffle(this.balicek);
     }
 
-    public void generujBalicekAkcny() {
+    private void generujBalicekAkcny() {
+        balicekAkcny = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             this.balicekAkcny.add(new Zamierit());
         }
@@ -74,12 +77,12 @@ public class StreleneKackyHra {
         Collections.shuffle(this.balicekAkcny);
     }
 
-    public void vytiahniKartu(Hrac hrac) {
+    private void vytiahniKartu(Hrac hrac) {
         hrac.pridajKartuDoRuky(this.balicekAkcny.get(0));
         this.balicekAkcny.remove(0);
     }
 
-    public void generujKartyHracom() {
+    private void generujKartyHracom() {
         for (Hrac hrac:this.hraci) {
             for (int i = 0; i < 3; i++) {
                 vytiahniKartu(hrac);
@@ -87,7 +90,7 @@ public class StreleneKackyHra {
         }
     }
 
-    public void vypisHracejPlochy(ArrayList<Balicek> balicek, boolean[] zamierovace) {
+    private void vypisHracejPlochy(ArrayList<Balicek> balicek, boolean[] zamierovace) {
         String zamierovac;
         for (int i = 0; i < 6; i++) {
             if (zamierovace[i])
@@ -99,24 +102,24 @@ public class StreleneKackyHra {
         System.out.println();
     }
 
-    public void hracNaTahu(Hrac hrac) {
+    private void hracNaTahu(Hrac hrac) {
         System.out.println("Hrac " + hrac.getCisloHracu());
-        System.out.println("Pocet zivotov: " + hrac.kacky.size());
+        System.out.println("Pocet zivotov: " + hrac.getKacky().size());
         System.out.println("Ma v ruke:");
         for (int i = 0; i < 3; i++) {
             System.out.println(i + ". " + hrac.getKartuVRuke(i));
         }
     }
 
-    public void zabiHraca(Hrac hrac, int indexHraca) {
-        for (int i = 0; i < hrac.kartyVRuke.size(); i++) {
+    private void zabiHraca(Hrac hrac, int indexHraca) {
+        for (int i = 0; i < hrac.getKartyVRuke().size(); i++) {
             this.balicekAkcny.add(hrac.getKartuVRuke(0));
-            hrac.kartyVRuke.remove(0);
+            hrac.getKartyVRuke().remove(0);
         }
         this.hraci.remove(indexHraca);
     }
 
-    public void zotriHraca(ArrayList<Hrac> hraci) {
+    private void zotriHraca(ArrayList<Hrac> hraci) {
         for (int i = hraci.size()-1; i >= 0 ; i--) {
             if (!hraci.get(i).isZivostHraca()) {
                 zabiHraca(hraci.get(i), i);
@@ -124,7 +127,7 @@ public class StreleneKackyHra {
         }
     }
 
-    public boolean asponDvajaSuZivy(ArrayList<Hrac> hraci) {
+    private boolean asponDvajaSuZivy(ArrayList<Hrac> hraci) {
         int pocetZivychHracov = hraci.size();
         for (int i = hraci.size()-1; i > 0 ; i--) {
             if (!hraci.get(i).isZivostHraca())
@@ -133,12 +136,12 @@ public class StreleneKackyHra {
         return pocetZivychHracov >= 2;
     }
 
-    public void zahodKartu (Hrac hrac) {
-        hrac.kartyVRuke.remove(0);
+    private void zahodKartu (Hrac hrac) {
+        hrac.getKartyVRuke().remove(0);
         vytiahniKartu(hrac);
     }
 
-    public boolean vsetkyZamierovaceSuAktivne (boolean[] zamierovace) {
+    private boolean vsetkyZamierovaceSuAktivne (boolean[] zamierovace) {
         boolean vsetkyZamierovaceSuAktivne = true;
         for (boolean zamierovac: zamierovace) {
             if (!zamierovac) {
@@ -149,9 +152,9 @@ public class StreleneKackyHra {
         return vsetkyZamierovaceSuAktivne;
     }
 
-    public boolean zamierovaceVynimka (Hrac hrac, boolean[] zamierovace){
+    private boolean zamierovaceVynimka (Hrac hrac, boolean[] zamierovace){
         boolean vsetkyKartySuZameriovace = true;
-        for (AkcneKarty karta: hrac.kartyVRuke) {
+        for (AkcneKarty karta: hrac.getKartyVRuke()) {
             if (karta.getClass() != Zamierit.class) {
                 vsetkyKartySuZameriovace = false;
                 break;
@@ -161,7 +164,7 @@ public class StreleneKackyHra {
         return vsetkyKartySuZameriovace && vsetkyZamierovaceSuAktivne(zamierovace);
     }
 
-    public boolean ziadenZamierovacNieJeAktivny (boolean[] zamierovace) {
+    private boolean ziadenZamierovacNieJeAktivny (boolean[] zamierovace) {
         boolean ziadenZamierovacNieJeAktivny = true;
         for (boolean zamierovac: zamierovace) {
             if (zamierovac) {
@@ -172,9 +175,9 @@ public class StreleneKackyHra {
         return ziadenZamierovacNieJeAktivny;
     }
 
-    public boolean vystrelitVynimka (Hrac hrac, boolean[] zamierovace){
+    private boolean vystrelitVynimka (Hrac hrac, boolean[] zamierovace){
         boolean vsetkyKartySuVystrelit = true;
-        for (AkcneKarty karta: hrac.kartyVRuke) {
+        for (AkcneKarty karta: hrac.getKartyVRuke()) {
             if (karta.getClass() != Vystrelit.class) {
                 vsetkyKartySuVystrelit = false;
                 break;
@@ -183,12 +186,12 @@ public class StreleneKackyHra {
         return vsetkyKartySuVystrelit && ziadenZamierovacNieJeAktivny(zamierovace);
     }
 
-    public boolean mozeBytZahranaKarta (Hrac hrac, boolean[] zamierovace, int indexKarty) {
-        if (hrac.kartyVRuke.get(indexKarty).getClass() == Zamierit.class && vsetkyZamierovaceSuAktivne(zamierovace)) {
+    private boolean mozeBytZahranaKarta (Hrac hrac, boolean[] zamierovace, int indexKarty) {
+        if (hrac.getKartyVRuke().get(indexKarty).getClass() == Zamierit.class && vsetkyZamierovaceSuAktivne(zamierovace)) {
             System.out.println("karta nemoze byt zahrana, lebo su vsetky zamierovace aktivne");
             return false;
         }
-        if (hrac.kartyVRuke.get(indexKarty).getClass() == Vystrelit.class && ziadenZamierovacNieJeAktivny(zamierovace)) {
+        if (hrac.getKartyVRuke().get(indexKarty).getClass() == Vystrelit.class && ziadenZamierovacNieJeAktivny(zamierovace)) {
             System.out.println("karta nemoze byt zahrana, lebo ziaden zamierovac nie je aktivny");
             return false;
         }
@@ -196,42 +199,44 @@ public class StreleneKackyHra {
             return true;
     }
 
-    public boolean potrebujePole(Hrac hrac, int indexKarty) {
-        if (hrac.kartyVRuke.get(indexKarty).getClass() == Zamierit.class) {
+    private boolean potrebujePole(Hrac hrac, int indexKarty) {
+        if (hrac.getKartyVRuke().get(indexKarty).getClass() == Zamierit.class) {
             return true;
         }
-        if (hrac.kartyVRuke.get(indexKarty).getClass() == Vystrelit.class) {
+        if (hrac.getKartyVRuke().get(indexKarty).getClass() == Vystrelit.class) {
             return true;
         }
-        if (hrac.kartyVRuke.get(indexKarty).getClass() == DivokyBil.class) {
+        if (hrac.getKartyVRuke().get(indexKarty).getClass() == DivokyBil.class) {
             return true;
         }
-        if (hrac.kartyVRuke.get(indexKarty).getClass() == TurboKacka.class) {
+        if (hrac.getKartyVRuke().get(indexKarty).getClass() == TurboKacka.class) {
             return true;
         }
         return false;
     }
 
-    public boolean spravneOznacenaKartaVRybniku (Hrac hrac, int indexKarty, int indexVRybniku, ArrayList<Balicek> balik, boolean[] zamierovace) {
-        if (hrac.kartyVRuke.get(indexKarty).getClass() == Zamierit.class) {
+    private boolean spravneOznacenaKartaVRybniku (Hrac hrac, int indexKarty, int indexVRybniku, ArrayList<Balicek> balik, boolean[] zamierovace) {
+        if (hrac.getKartyVRuke().get(indexKarty).getClass() == Zamierit.class) {
             if (zamierovace[indexVRybniku])
                 return false;
         }
-        if (hrac.kartyVRuke.get(indexKarty).getClass() == Vystrelit.class) {
+        if (hrac.getKartyVRuke().get(indexKarty).getClass() == Vystrelit.class) {
             if (!zamierovace[indexVRybniku])
                 return false;
         }
-        if (hrac.kartyVRuke.get(indexKarty).getClass() == TurboKacka.class) {
+        if (hrac.getKartyVRuke().get(indexKarty).getClass() == TurboKacka.class) {
             if (balik.get(indexVRybniku).getClass() != Kacky.class)
                 return false;
         }
         return true;
     }
 
-    public void zacniHru () {
+    private void zacniHru () {
         while (this.hraci.size() != 1) {
             for (Hrac hrac:this.hraci) {
                     if (hrac.isZivostHraca() && asponDvajaSuZivy(this.hraci)) {
+                        int zahranaKartaZRuke;
+                        int poziciaKartyVRybniku = -1;
                         vypisHracejPlochy(this.balicek, this.zamierovace);
                         hracNaTahu(hrac);
                         if (vystrelitVynimka(hrac, zamierovace) || zamierovaceVynimka(hrac, zamierovace)) {
@@ -239,13 +244,11 @@ public class StreleneKackyHra {
                             System.out.println("Ziadna karta nemohla byt zahrana");
                             break;
                         }
-                        int zahranaKartaZRuke;
+                        do {
                             do {
-                                do {
-                                    zahranaKartaZRuke = ZKlavesnice.readInt("Zadajte ktoru kartu chces zahrat (hodnota musi byt medzi 0 a 2): ");
-                                } while (zahranaKartaZRuke < 0 || zahranaKartaZRuke > 2);
-                            } while (!mozeBytZahranaKarta(hrac, zamierovace, zahranaKartaZRuke));
-                        int poziciaKartyVRybniku = -1;
+                                zahranaKartaZRuke = ZKlavesnice.readInt("Zadajte ktoru kartu chces zahrat (hodnota musi byt medzi 0 a 2): ");
+                            } while (zahranaKartaZRuke < 0 || zahranaKartaZRuke > 2);
+                        } while (!mozeBytZahranaKarta(hrac, zamierovace, zahranaKartaZRuke));
                         while (potrebujePole(hrac, zahranaKartaZRuke) && poziciaKartyVRybniku == -1) {
                             while (poziciaKartyVRybniku < 0 || poziciaKartyVRybniku > 5) {
                                 poziciaKartyVRybniku = ZKlavesnice.readInt("Ktoru kartu chces oznacit (hodnota musi byt medzi 0 a 5): ");
@@ -255,10 +258,10 @@ public class StreleneKackyHra {
                                 poziciaKartyVRybniku = -1;
                             }
                         }
-                        hrac.kartyVRuke.get(zahranaKartaZRuke).zahrat(this.hraci, this.zamierovace, this.balicek, poziciaKartyVRybniku, this.balicekAkcny);
+                        hrac.getKartyVRuke().get(zahranaKartaZRuke).zahrat(this.hraci, this.zamierovace, this.balicek, poziciaKartyVRybniku, this.balicekAkcny);
                         if (hrac.isZivostHraca()) {
-                            this.balicekAkcny.add(hrac.kartyVRuke.get(zahranaKartaZRuke));
-                            hrac.kartyVRuke.remove(zahranaKartaZRuke);
+                            this.balicekAkcny.add(hrac.getKartyVRuke().get(zahranaKartaZRuke));
+                            hrac.getKartyVRuke().remove(zahranaKartaZRuke);
                             vytiahniKartu(hrac);
                         }
                     }

@@ -13,7 +13,7 @@ public abstract class AkcneKarty {
         return getClass().getSimpleName();
     }
 
-    public int indexHraca(Kacky kacica, ArrayList<Hrac> hraci) {
+    private int indexHraca(Kacky kacica, ArrayList<Hrac> hraci) {
         int x = kacica.getPrisluchaHracovi();
         int index = 0;
         for (int i = hraci.size()-1; i > 0 ; i--) {
@@ -31,7 +31,7 @@ public abstract class AkcneKarty {
         Kacky kacica = (Kacky)itr.next();
         int indexHraca = indexHraca(kacica, hraci);
         hraci.get(indexHraca).zotriKacicu();
-        if (hraci.get(indexHraca).kacky.size() == 0) {
+        if (hraci.get(indexHraca).getKacky().size() == 0) {
             hraci.get(indexHraca).setZivostHraca(false);
         }
         balicek.remove(poziciaKackyVBalicku);
