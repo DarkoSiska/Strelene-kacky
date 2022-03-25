@@ -108,14 +108,33 @@ public class StreleneKackyHra {
     public void zabiHraca(Hrac hrac, int indexHraca) {
         for (int i = 0; i < hrac.kartyVRuke.size(); i++) {
             this.balicekAkcny.add(hrac.getKartuVRuke(0));
+            hrac.kartyVRuke.remove(0);
         }
         this.hraci.remove(indexHraca);
+    }
+
+    public void zotriHraca(ArrayList<Hrac> hraci) {
+        for (int i = hraci.size()-1; i > 0 ; i--) {
+            if (!hraci.get(i).isZivostHraca()) {
+                zabiHraca(hraci.get(i), i);
+            }
+        }
+    }
+
+    public Boolean asponDvajaSuZivy(ArrayList<Hrac> hraci) {
+        int pocetZivychHracov = hraci.size();
+        for (Hrac hrac: hraci) {
+            if (!hrac.isZivostHraca())
+                pocetZivychHracov--;
+        }
+        return pocetZivychHracov >= 2;
     }
 
     public void zacniHru () {
         while (this.hraci.size() != 1) {
             for (Hrac hrac:this.hraci) {
-                    if (hrac.isZivostHraca()) {
+                //TODO prever nech nikdy nezomru vsetci
+                    if (hrac.isZivostHraca() && asponDvajaSuZivy(this.hraci)) {
                         vypisHracejPlochy(this.balicek, this.zamierovace);
                         hracNaTahu(hrac);
                         int zahraNaKartaZRuke = ZKlavesnice.readInt("Zadajte ktoru kartu chces zahrat: ");
@@ -129,11 +148,7 @@ public class StreleneKackyHra {
                         }
                     }
                 }
-            for (int i = this.hraci.size()-1; i > 0 ; i--) {
-                if (!this.hraci.get(i).isZivostHraca()) {
-                    zabiHraca(this.hraci.get(i), i);
-                }
-            }
+            zotriHraca(this.hraci);
             System.out.println("+++++++++++++++++++++++++++++++++++++");
         }
         System.out.println("Vyhral Hrac " + this.hraci.get(0).getCisloHracu());
